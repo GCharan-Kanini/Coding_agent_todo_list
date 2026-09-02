@@ -1,0 +1,7 @@
+stack: python-pytest
+install_cmd: pip install -r requirements.in
+build_cmd: python -m compileall -q .
+test_cmd: python -m pytest -q
+test_selector: python -m pytest -q {path}
+dependency_file: requirements.in
+runtime_version: '3.11'
