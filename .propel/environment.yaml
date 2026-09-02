@@ -1,3 +1,4 @@
 stack: python
 install_cmd: pip install -r requirements.in
 dependency_file: requirements.in
+runtime_version: '3.11'
