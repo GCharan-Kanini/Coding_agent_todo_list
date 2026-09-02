@@ -3,15 +3,22 @@
 
 class Todo:
     def __init__(self, title):
-        raise NotImplementedError
+        self.title = title
+        self.done = False
 
 
 class TodoList:
+    def __init__(self):
+        self.todos = []
+    
     def add(self, title):
-        raise NotImplementedError
+        todo = Todo(title)
+        self.todos.append(todo)
 
     def complete(self, index):
-        raise NotImplementedError
+        if index < 0 or index >= len(self.todos):
+            raise ValueError
+        self.todos[index].done = True
 
     def list_all(self):
-        raise NotImplementedError
+        return self.todos
