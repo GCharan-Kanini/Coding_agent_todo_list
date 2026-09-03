@@ -1,0 +1,16 @@
+stack: node-playwright
+install_cmd: npm install
+syntax_cmd: find . -path ./node_modules -prune -o \( -name '*.js' -o -name '*.mjs'
+  -o -name '*.cjs' \) -print0 | xargs -0 -r -n1 node --check
+build_cmd: npm run build --if-present
+test_cmd: PLAYWRIGHT_JUNIT_OUTPUT_NAME=.propel/junit.xml npx playwright test --reporter=junit;
+  cat .propel/junit.xml
+test_selector: PLAYWRIGHT_JUNIT_OUTPUT_NAME=.propel/junit.xml npx playwright test
+  --reporter=junit {path}; cat .propel/junit.xml
+dependency_file: package.json
+runtime_version: '20'
+services:
+- name: todo-web-app
+  image: node
+  env: {}
+  health_check: node -e "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
