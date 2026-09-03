@@ -1,0 +1,13 @@
+{
+  "name": "coding-agent-todo-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.47.0"
+  }
+}
