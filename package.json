@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "react": "*",
+    "typescript": "*",
+    "vite": "*",
+    "tailwindcss": "*"
+  }
+}
