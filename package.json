@@ -7,7 +7,7 @@
     "test": "npx vitest run"
   },
   "dependencies": {
-    "react": "*"
+    "React": "*"
   },
   "devDependencies": {
     "vitest": "*"
