@@ -46,3 +46,40 @@ def clear_tasks_for_testing() -> None:
     function is optional.
     """
     _TASKS.clear()
+
+
+def update_task_status(index: int, status: str) -> None:
+    """Update the status of the task at the given zero-based index.
+
+    Args:
+        index: Zero-based index of the task to update.
+        status: New status string; must be one of the domain-allowed statuses.
+
+    Raises:
+        IndexError: If index is out of range.
+        ValueError: If status is not allowed.
+    """
+    from src.domain.task import ALLOWED_STATUSES
+
+    if status not in ALLOWED_STATUSES:
+        raise ValueError(f"Invalid status '{status}'. Allowed: {ALLOWED_STATUSES}")
+
+    try:
+        _TASKS[index].status = status
+    except IndexError:
+        raise IndexError(f"index {index} is out of range (0..{len(_TASKS) - 1})")
+
+
+def remove_task(index: int) -> None:
+    """Remove the task at the given zero-based index from the repository.
+
+    Args:
+        index: Zero-based index of the task to remove.
+
+    Raises:
+        IndexError: If index is out of range.
+    """
+    try:
+        del _TASKS[index]
+    except IndexError:
+        raise IndexError(f"index {index} is out of range (0..{len(_TASKS) - 1})")
