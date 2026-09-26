@@ -67,6 +67,71 @@ def handle_view() -> None:
         print(f"{idx}. {task.title} - {task.status}")
 
 
+def handle_mark_completed(index: int) -> None:
+    """Mark the task at zero-based index as Completed.
+
+    The handler validates the provided index (must be an int within range)
+    and updates repository state. On invalid input a ValueError is raised and
+    repository state is not modified.
+    """
+    # Validate input type
+    if not isinstance(index, int):
+        raise ValueError(f"Invalid index: {index!r}")
+
+    tasks = repo.list_tasks()
+    if index < 0 or index >= len(tasks):
+        raise ValueError(f"index {index} is out of range (0..{len(tasks) - 1})")
+
+    # Update status via repository helper
+    repo.update_task_status(index, "Completed")
+
+
+def handle_delete(index: int, confirm: bool = False) -> None:
+    """Delete the task at zero-based index if confirmed.
+
+    Args:
+        index: Zero-based index of the task to delete.
+        confirm: When True perform deletion; when False do nothing.
+
+    Raises:
+        ValueError: If index is not an int or out of range.
+    """
+    if not isinstance(index, int):
+        raise ValueError(f"Invalid index: {index!r}")
+
+    tasks = repo.list_tasks()
+    if index < 0 or index >= len(tasks):
+        raise ValueError(f"index {index} is out of range (0..{len(tasks) - 1})")
+
+    if confirm:
+        repo.remove_task(index)
+
+
+def dispatch_command(command: str, params: dict) -> None:
+    """Dispatch a simple command to the corresponding handler.
+
+    This helper is used by tests to exercise dispatch behaviour without
+    invoking the interactive main loop.
+    """
+    if command == "add":
+        title = params.get("title")
+        _handle_add_args(title)
+    elif command in ("view", "list"):
+        handle_view()
+    elif command == "mark-completed":
+        idx = params.get("index")
+        handle_mark_completed(idx)
+    elif command == "delete":
+        idx = params.get("index")
+        confirm = bool(params.get("confirm", False))
+        handle_delete(idx, confirm=confirm)
+    elif command == "exit":
+        # No-op for dispatch; callers handle loop termination
+        return
+    else:
+        raise ValueError(f"unknown command: {command}")
+
+
 def main(argv: Optional[List[str]] = None) -> None:
     """Parse arguments and dispatch commands.
 
