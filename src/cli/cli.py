@@ -43,6 +43,30 @@ def _handle_add_args(title: Optional[str]) -> None:
         print(str(exc))
 
 
+def handle_view() -> None:
+    """Handle the view command by printing the in-memory task list.
+
+    This function is intentionally read-only: it retrieves the current
+    in-memory tasks from the repository and renders them to stdout. It does
+    not perform any file or network I/O and does not modify repository state.
+
+    Behaviour:
+    - When one or more tasks exist: prints exactly one line per task in the
+      format "<index>. <title> - <status>" where index is 1-based and status is
+      shown verbatim ("Pending" or "Completed").
+    - When no tasks exist: prints the clear message "No tasks found.".
+    """
+    tasks = repo.list_tasks()
+
+    if not tasks:
+        print("No tasks found.")
+        return
+
+    for idx, task in enumerate(tasks, start=1):
+        # Print index, title and status verbatim per acceptance criteria
+        print(f"{idx}. {task.title} - {task.status}")
+
+
 def main(argv: Optional[List[str]] = None) -> None:
     """Parse arguments and dispatch commands.
 
@@ -57,10 +81,15 @@ def main(argv: Optional[List[str]] = None) -> None:
     add_parser = subparsers.add_parser("add", help="Add a new task")
     add_parser.add_argument("title", nargs="?", help="Task title (optional; if omitted, prompts interactively)")
 
+    # View subcommand: show current in-memory tasks without modifying them
+    view_parser = subparsers.add_parser("view", help="View current tasks")
+
     args = parser.parse_args(argv[1:] if argv is not None else None)
 
     if args.command == "add":
         _handle_add_args(getattr(args, "title", None))
+    elif args.command == "view":
+        handle_view()
     else:
         parser.print_help()
 
